@@ -1,0 +1,153 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace FactoryMethod
+{
+    internal class Program
+    {
+        static void Main(string[] args)
+        {
+            Console.WriteLine("Выберите тип доставки: \n1.Пицца \n2.Бургер \n3.Cуши \n4.Пирог \n5.Вок \n6.Паста");
+            int choice = int.Parse(Console.ReadLine());
+
+            Delivery delivery = null;
+
+            switch (choice) 
+            {
+                case 1:
+                    delivery = new PizzaDelivery();
+                    break;
+                case 2:
+                    delivery = new BurgerDelivery();
+                    break;
+                case 3:
+                    delivery = new SushiDelivery();
+                    break;
+                case 4:
+                    delivery = new PieDelivery();
+                    break;
+                case 5:
+                    delivery = new WokDelivery();
+                    break;
+                case 6:
+                    delivery = new PastaDelivery();
+                    break;
+            }
+
+            delivery.Deliver();
+        }
+    }
+
+    public abstract class Food 
+    { 
+        public abstract void Prepair();
+    }
+
+    public class Pizza : Food
+    {
+        public override void Prepair()
+        {
+            Console.WriteLine("Пицца готовится с сыром и томатами");
+        }
+    }
+    public class Sushi : Food
+    {
+        public override void Prepair()
+        {
+            Console.WriteLine("Суши готовятся с рисом и рыбой");
+        }
+    }
+    public class Burger : Food
+    {
+        public override void Prepair()
+        {
+            Console.WriteLine("Бургер готовится с котлетой, сыром и булкой"); 
+        }
+    }
+
+    public class Pie : Food
+    {
+        public override void Prepair()
+        {
+            Console.WriteLine("Готовится пирог с яблоками ");
+        }
+    }
+
+    public class Wok : Food
+    {
+        public override void Prepair()
+        {
+            Console.WriteLine("Вок с овощами готовится");
+        }
+    }
+
+    public class Pasta : Food
+    {
+        public override void Prepair()
+        {
+            Console.WriteLine("Паста с беконом и грибами готовится");
+        }
+    }
+    //Абстрактный создатель
+    public abstract class Delivery 
+    {
+        public abstract Food CreateFood();    //фабричный метод
+
+        public void Deliver() 
+        { 
+            var food = CreateFood();//заказ на еду
+            food.Prepair();//рецепт
+            Console.WriteLine("Еда доставлена клиенту");
+        }
+    }
+
+    public class PizzaDelivery : Delivery
+    {
+        public override Food CreateFood()
+        {
+            return new Pizza();
+        }
+    }
+
+    public class BurgerDelivery : Delivery
+    {
+        public override Food CreateFood()
+        {
+            return new Burger();
+        }
+    }
+    public class SushiDelivery : Delivery
+    {
+        public override Food CreateFood()
+        {
+            return new Sushi();
+        }
+    }
+
+    public class PieDelivery : Delivery
+    {
+        public override Food CreateFood()
+        {
+            return new Pie();
+        }
+    }
+
+    public class WokDelivery : Delivery
+    {
+        public override Food CreateFood()
+        {
+            return new Wok();
+        }
+    }
+
+    public class PastaDelivery : Delivery
+    {
+        public override Food CreateFood()
+        {
+            return new Pasta();
+        }
+    }
+}
