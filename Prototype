@@ -1,0 +1,74 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Prototype
+{
+    internal class Program
+    {
+        static void Main(string[] args)
+        {
+            Skin skin = new Skin()
+            {
+                Name = "Skin1",
+                Type = "Type1"
+            };
+
+            GameCharacter character1 = new GameCharacter("Ivi","Elf",45,"Bow",skin);
+            Console.WriteLine(character1);
+
+            GameCharacter character2 = character1.Clone();
+            Console.WriteLine(character2);
+
+            character2.Level = 1;
+            character2.SkinCharacter.Type = "Type34";
+
+            Console.WriteLine(character1);
+            Console.WriteLine(character2);
+        }
+    }
+    //прототип
+    public interface ICloneablePrototype<T>
+    { 
+        T Clone();
+    }
+
+    public class GameCharacter : ICloneablePrototype<GameCharacter>
+    {
+        public string Name { get; set; }  
+        public string Class { get; set; }
+        public int Level { get; set; }
+        public string Weapon {  get; set; }
+
+        public Skin SkinCharacter { get; set; }
+
+        public GameCharacter(string name, string charterClass, int level, string weapon, Skin skin)
+        {
+            Name = name;
+            Class = charterClass;
+            Level = level;
+            Weapon = weapon;
+            SkinCharacter = skin;
+        }
+
+        public override string ToString() 
+        {
+            return $"Имя: {Name}, класс {Class}, Уровень {Level}, Оружие {Weapon}, Скин: {SkinCharacter.Name}, Тип: {SkinCharacter.Type}";
+        }
+
+        public GameCharacter Clone()
+        {
+            return (GameCharacter)MemberwiseClone();
+        }
+    }
+    public class Skin 
+    { 
+        public string Name { get; set; }
+
+        public string Type { get; set; }
+
+
+    }
+}
