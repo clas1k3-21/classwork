@@ -1,0 +1,65 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Adapter
+{
+    internal class Program
+    {
+        static void Main(string[] args)
+        {
+            OldPrinter printerOld = new OldPrinter();
+
+            INewPrinter adapter = new PrinterAdapter(printerOld);
+
+            PrinterNew printer = new PrinterNew(adapter);
+
+            printer.PrintNew("Документ");
+        }
+    }
+    //старый код
+    public class OldPrinter 
+    {
+        public void PrintOld(string message) 
+        {
+            Console.WriteLine($"Старый принтер печатает: {message}");
+        }
+    }
+    //что мы ожидаем от нового кода
+    public interface INewPrinter 
+    { 
+        void Print(string message);
+    }
+
+    public class PrinterAdapter : INewPrinter
+    {
+        private OldPrinter old;
+
+        public PrinterAdapter(OldPrinter printer)
+        {
+            old = printer;
+        }
+
+        public void Print(string message)
+        {
+            old.PrintOld(message);
+        }
+    }
+
+    public class PrinterNew 
+    {
+        private PrinterAdapter printer;
+
+        public PrinterNew(PrinterAdapter printerNew) 
+        {
+            printer = printerNew;    
+        }
+
+        public void PrintNew(string message) 
+        { 
+            printer.Print(message);
+        }
+    }
+}
