@@ -1,0 +1,161 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace ConsoleApp19
+{
+    internal class Program
+    {
+        static void Main(string[] args)
+        {
+            Console.WriteLine("Выберете стиль игры:\n1.Фэнтези\n2.Киберпанк\n3.Файтинг");
+
+            string choice = Console.ReadLine();
+
+            IGameFactory factory = null;
+
+            if (choice == "1")
+            {
+                factory = new FantasyFactory();
+            }
+            else if (choice == "2")
+            {
+                factory = new CyberpunkFactory();
+            }
+
+            else if (choice == "3") 
+            {
+                factory = new FightingFactory(); 
+            }
+            var game = new Game(factory);
+
+            game.Start();
+        }
+
+        public interface ICharacter 
+        {
+            void Describe();
+        }
+
+        public interface ILocation 
+        {
+            void Describe();
+        }
+
+        public class FantasyCharacter : ICharacter 
+        {
+            public void Describe() 
+            {
+                Console.WriteLine("Вы играете за эльфа");
+            }
+        }
+
+        public class FantasyLocation : ILocation
+        {
+            public void Describe()
+            {
+                Console.WriteLine("Вы находитесь в магическом лесу");
+            }
+        }
+
+        public class CyberpunkCharacter : ICharacter
+        {
+            public void Describe()
+
+            {
+                Console.WriteLine("Вы играете за хакера");
+            }
+        }
+
+        public class CyberpunkLocation : ILocation
+        {
+            public void Describe()
+            {
+                Console.WriteLine("Вы находитесь в мегаполисе будующего");
+            }
+        }
+
+        public class FightingCharacter : ICharacter
+        {
+            public void Describe()
+            {
+                Console.WriteLine("Вы играете за бойца");
+            }
+        }
+
+        public class FightingLocation : ILocation
+        {
+            public void Describe()
+            {
+                Console.WriteLine("Вы находитесь в локации бойца");
+            }
+        }
+
+        public interface IGameFactory 
+        {
+            ICharacter CreateCharter();
+
+            ILocation CreateLocation();
+        }
+
+        public class FantasyFactory : IGameFactory
+        {
+            public ICharacter CreateCharter()
+            {
+                return new FantasyCharacter();
+            }
+
+            ILocation IGameFactory.CreateLocation()
+            {
+                return new FantasyLocation();
+            }
+        }
+
+        public class CyberpunkFactory : IGameFactory
+        {
+            public ICharacter CreateCharter()
+            {
+                return new CyberpunkCharacter();
+            }
+
+            ILocation IGameFactory.CreateLocation()
+            {
+                return new CyberpunkLocation();
+            }
+        }
+
+        public class FightingFactory : IGameFactory
+        {
+            public ICharacter CreateCharter()
+            {
+                return new FightingCharacter();
+            }
+
+            ILocation IGameFactory.CreateLocation()
+            { 
+                return new FightingLocation();
+            }
+        }
+        //клиент
+        public class Game 
+        { 
+            private ICharacter character;
+            private ILocation location;
+
+            public Game(IGameFactory factory)
+            {
+                character = factory.CreateCharter();
+                location = factory.CreateLocation();
+            }
+
+            public void Start() 
+            { 
+                Console.WriteLine("Добро пожаловать в игру!");
+                character.Describe();
+                location.Describe();
+            }
+        }
+    }
+}
