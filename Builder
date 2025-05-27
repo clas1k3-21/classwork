@@ -1,0 +1,123 @@
+using System;
+using System.Collections.Generic;
+using System.Diagnostics.Contracts;
+using System.Linq;
+using System.Reflection.Emit;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Builder
+{
+    internal class Program
+    {
+        static void Main(string[] args)
+        {
+            CharacterBuild warriorBuilder = new WarriorBuilder();
+            CharacterDirector director = new CharacterDirector(warriorBuilder);
+
+            director.BuildCharacter();
+
+            Character warrior = director.GetCharacter();
+
+            Console.WriteLine(warrior);
+        }
+    }
+
+    public class Character 
+    { 
+        public string Type { get; set; }
+
+        public string Weapon { get; set; }
+
+        public int Health { get; set; }    
+        
+        public int Armor {  get; set; } 
+
+        public int AttackPower {  get; set; }
+
+        public override string ToString()
+        {
+            return $"Тип: {Type}\n" +
+                $"Оружие: {Weapon}\n" +
+                $"Здоровье: {Health}\n" +
+                $"Броня: {Armor}\n" +
+                $"Атака: {AttackPower}\n";
+        }
+    }
+
+    public abstract class CharacterBuild 
+    { 
+        protected Character character = new Character();
+
+        public abstract void SetType();
+        public abstract void SetWeapon();
+        public abstract void SetAttributes();
+
+        public Character GetResult() 
+        { 
+            return character;
+        }
+    }
+
+    public class WarriorBuilder : CharacterBuild
+    {
+        public override void SetType()
+        {
+            character.Type = "Воин";
+        }
+
+        public override void SetWeapon()
+        {
+            character.Weapon = "Меч";
+        }
+
+        public override void SetAttributes()
+        {
+            character.Health = 150;
+            character.Armor = 100;
+            character.AttackPower = 50;
+        }
+    }
+
+    public class MageBuilder : CharacterBuild
+    {
+        public override void SetType()
+        {
+            character.Type = "Маг";
+        }
+
+        public override void SetWeapon()
+        {
+            character.Weapon = "Магический посох";
+        }
+
+        public override void SetAttributes()
+        {
+            character.Health = 100;
+            character.Armor = 50;
+            character.AttackPower = 90;
+        }
+    }
+
+    public class CharacterDirector 
+    {
+        private CharacterBuild builder;
+
+        public CharacterDirector(CharacterBuild builder)
+        {
+            this.builder = builder;
+        }
+
+        public void BuildCharacter() 
+        { 
+            builder.SetType();
+            builder.SetWeapon();
+            builder.SetAttributes();
+        }
+
+        public Character GetCharacter() 
+        { 
+            return builder.GetResult();
+        }
+    }
+}
