@@ -1,0 +1,100 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Runtime.CompilerServices;
+using System.Security.AccessControl;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Composite
+{
+    internal class Program
+    {
+        static void Main(string[] args)
+        {
+            Menu MainMenu = new Menu("Основное меню"); //основное меню
+
+            //подраздел горячее
+
+            Menu hotMenu = new Menu("Горячее");
+
+            //подраздел десерт
+
+            Menu dessertMenu = new Menu("Десерты");
+
+            //Блюда
+            MenuItem pizza = new MenuItem("Пицца");
+            MenuItem pasta = new MenuItem("Паста");
+            MenuItem iceCream = new MenuItem("Мороженое");
+            MenuItem dishOfDay = new MenuItem("Вок");
+
+            hotMenu.Add(pizza);
+            hotMenu.Add(pasta);
+            dessertMenu.Add(iceCream);
+            
+            MainMenu.Add(dishOfDay);
+            MainMenu.Add(hotMenu);
+            MainMenu.Add(dessertMenu);
+
+            MainMenu.Display(0);
+        }
+    }
+
+    public interface IMenuComponent 
+    {
+        void Display(int spaces);
+    }
+    //блюдо
+    public class MenuItem : IMenuComponent
+    {
+        private string name;
+
+        public MenuItem(string name)
+        {
+            this.name = name;
+        }
+
+        public void Display(int spaces)
+        {
+            for (int i = 0; i < spaces; i++) 
+            {
+                Console.Write("  ");
+            }
+            Console.WriteLine("Блюдо: " + name);
+        }
+    }
+
+    public class Menu : IMenuComponent
+    {
+        private string name;
+        private List<IMenuComponent> items = new List<IMenuComponent>();
+
+        public Menu(string name)
+        {
+            this.name = name;
+        }
+
+        public void Add(IMenuComponent component) 
+        { 
+            items.Add(component);
+        }
+
+        public void Remove(IMenuComponent component) 
+        {
+            items.Remove(component);
+        }
+
+        public void Display(int spaces)
+        {
+            for (int i = 0; i < spaces; i++) 
+            {
+                Console.Write(" ");
+            }
+            Console.WriteLine($"Меню: {name}");
+            foreach (var item in items) 
+            {
+                item.Display(spaces + 1);
+            }
+        }
+    }
+}
