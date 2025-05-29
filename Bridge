@@ -1,0 +1,143 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Net.NetworkInformation;
+using System.Text;
+using System.Threading.Tasks;
+using static Bridge1.Radio;
+
+namespace Bridge1
+{
+    internal class Program
+    {
+        static void Main(string[] args)
+        {
+            IDevice radio = new Radio();
+            IDevice tv = new TV();
+            IDevice speaker = new Speaker();
+
+            RemoteControl remote = new RemoteControl(radio);
+            remote.TurnOn();
+            remote.TurnOff();
+
+            remote = new RemoteControl(tv);
+            remote.TurnOn();
+            remote.TurnOff();
+
+            remote = new RemoteControl(speaker);
+            remote.TurnOn();
+            remote.TurnOff();
+
+            AdvancedRemoteControl advancedRemote = new AdvancedRemoteControl(radio);
+            advancedRemote.TurnOn();
+            advancedRemote.SetVolume(50); 
+            advancedRemote.TurnOff();
+
+            advancedRemote = new AdvancedRemoteControl(tv);
+            advancedRemote.TurnOn();
+            advancedRemote.SetVolume(50);
+            advancedRemote.TurnOff();
+
+            advancedRemote = new AdvancedRemoteControl(speaker);
+            advancedRemote.TurnOn();
+            advancedRemote.SetVolume(50);
+            advancedRemote.TurnOff();
+        }
+    }
+
+    public interface IDevice 
+    {
+        void TurnOn();
+
+        void TurnOff();
+
+        void SetVolume(int volume);
+    }
+
+    public class TV : IDevice
+    {
+        public void SetVolume(int volume)
+        {
+            Console.WriteLine($"TV volume set to: {volume}");
+        }
+
+        public void TurnOff()
+        {
+            Console.WriteLine("TV is now Off");
+        }
+
+        public void TurnOn()
+        {
+            Console.WriteLine("TV is now on");
+        }
+    }
+
+    public class Radio : IDevice
+    {
+        public void SetVolume(int volume)
+        {
+            Console.WriteLine($"Radio volume set to: {volume}");
+        }
+
+        public void TurnOff()
+        {
+            Console.WriteLine("Radio is now Off");
+        }
+
+        public void TurnOn()
+        {
+            Console.WriteLine("Radio is now on");
+        }
+    }
+
+    public class Speaker : IDevice
+    {
+        public void SetVolume(int volume)
+        {
+            Console.WriteLine($"Speaker volume set to: {volume}");
+        }
+
+        public void TurnOff()
+        {
+            Console.WriteLine("Speaker is now Off");
+        }
+
+        public void TurnOn()
+        {
+            Console.WriteLine("Speaker is now on");
+        }
+    }
+    public class RemoteControl 
+        {
+            public IDevice device;
+
+            public RemoteControl(IDevice device)
+            {
+                this.device = device;
+            }
+
+            public virtual void TurnOn() //virtual для того чтобы методы можно было бы просто переписать
+            { 
+                device.TurnOn();
+            }
+
+            public virtual void TurnOff() 
+            { 
+                device.TurnOff();
+            }
+        }
+    
+
+    public class AdvancedRemoteControl : RemoteControl 
+    { 
+        public AdvancedRemoteControl(IDevice device) : base(device) // base == RemoteControl
+        { 
+                
+        }
+
+        public void SetVolume(int value) 
+        { 
+            device.SetVolume(value);
+        }
+    }
+}
