@@ -1,0 +1,145 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Runtime.Remoting.Lifetime;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Facade
+{
+    internal class Program
+    {
+        static void Main(string[] args)
+        {
+            HomeTheaterSystem homeTheater = new HomeTheaterSystem();
+            LightingSystem lighting = new LightingSystem();
+            SmartHomeSystem smartHome = new SmartHomeSystem();
+            var smarthomefacade = new SmartHomeFacade(lighting,smartHome);
+
+            Console.WriteLine("Выберите, что хотите сделать: \n1.Посмотреть фильм\n2.Закрыть дом\n3.Открыть дом");
+            int choice = int.Parse(Console.ReadLine());
+
+            if (choice == 1) 
+            {
+                var hometheaterfacade = new HomeTheaterFacade(homeTheater, lighting);
+                hometheaterfacade.WatchMovie();
+            }
+            if (choice == 2) 
+            {
+                smarthomefacade.CloseHouse();
+            }
+            if (choice == 3) 
+            {
+                smarthomefacade.OpenHouse();
+            }
+        }
+    }
+
+    public class HomeTheaterSystem
+    {
+        public void TurnOnTV()
+        {
+            Console.WriteLine("Телевизор включен");
+        }
+
+        public void SetVolume() 
+        {
+            Console.WriteLine("Громкость установлена: 50%");
+        }
+
+        public void SetSteamingService() 
+        {
+            Console.WriteLine("Подключение к стриминговому сервису");
+        }
+    }
+
+    public class LightingSystem 
+    {
+        public void TurnOnLight() 
+        {
+            Console.WriteLine("Свет включен");
+        }
+
+        public void TurnOffLight()
+        {
+            Console.WriteLine("Свет выключен");
+        }
+    }
+
+    public class HomeTheaterFacade 
+    {
+        private HomeTheaterSystem _homeTheater;
+        private LightingSystem _lighting;
+        public HomeTheaterFacade(HomeTheaterSystem homeTheater, LightingSystem lighting)
+        {
+            this._homeTheater = homeTheater;
+            this._lighting = lighting;
+        }
+
+        public void WatchMovie() 
+        {
+            Console.WriteLine("Система домашнего кинотеатра включается....");
+            _homeTheater.TurnOnTV();
+            _homeTheater.SetVolume();
+            _homeTheater.SetSteamingService();
+            _lighting.TurnOffLight();
+            Console.WriteLine("Система домашнего кинотеатра включена, приятного просмотра!");
+        }
+    }
+
+    public class SmartHomeSystem 
+    {
+        public void CloseWindows() 
+        {
+            Console.WriteLine("Окна закрыты");
+        }
+        public void TurnOffElectricity() 
+        {
+            Console.WriteLine("Электричество выключено");
+        }
+        public void CloseDoors() 
+        {
+            Console.WriteLine("Двери закрыты");
+        }
+        public void OpenWindows()
+        {
+            Console.WriteLine("Окна открыты");
+        }
+        public void TurnOnElectricity()
+        {
+            Console.WriteLine("Электричество включено");
+        }
+        public void OpenDoors()
+        {
+            Console.WriteLine("Двери открыты");
+        }
+    }
+    public class SmartHomeFacade 
+    {
+        private LightingSystem _lighting;
+        private SmartHomeSystem _smartHome;
+
+        public SmartHomeFacade(LightingSystem lighting,SmartHomeSystem smartHome )
+        {
+            this._lighting = lighting;
+            this._smartHome = smartHome;
+        }
+
+        public void CloseHouse() 
+        {
+            _lighting.TurnOffLight();
+            _smartHome.CloseWindows();
+            _smartHome.CloseDoors();
+            _smartHome.TurnOffElectricity();
+        }
+
+        public void OpenHouse()
+        {
+            _lighting.TurnOnLight(); 
+            _smartHome.OpenWindows();
+            _smartHome.OpenDoors();
+            _smartHome.TurnOnElectricity();
+            Console.WriteLine("Добро пожаловать!");
+        }
+    }
+}
