@@ -1,0 +1,95 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Runtime.InteropServices;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace FlyWeight
+{
+    internal class Program
+    {
+        static void Main(string[] args)
+        {
+            var trees = new List<Tree>();
+            var treeType1 = new TreeType("Ель", "Зеленый", "Грубая кора");
+            var treeType2= new TreeType("Береза", "Белый", "Мягкая кора");
+
+            for (int i = 0; i < 10; i++) 
+            {
+                var tree = new Tree(i * 14, i * 8, treeType1);
+                trees.Add(tree);
+            }
+
+            for (int i = 0; i < 15; i++) 
+            {
+                var tree = new Tree(i * 6, i * 12, treeType2);
+                trees.Add(tree);
+            }
+
+            foreach(var tree in trees)
+            {
+                tree.Display();
+            }
+        }
+    }
+    //flyweight (Легковес)
+    public class TreeType 
+    { 
+        public string Name { get; private set; }
+        public string Color { get; private set; }
+        public string Texture { get; private set; }
+
+        public TreeType(string Name, string Color, string Texture)
+        {
+            this.Name = Name;
+            this.Color = Color;
+            this.Texture = Texture;
+        }
+
+        public void Display(int x, int y) 
+        {
+            Console.WriteLine($"Дерево типа {Name},Цвета {Color} и текстурой {Texture} находится на координатах {x},{y}");
+        }
+    }
+
+    public class Tree 
+    {
+        private TreeType _type;
+        private int _x;
+        private int _y;
+
+        public Tree(int x, int y, TreeType type)
+        {
+            _x = x;
+            _y = y;
+            _type = type;
+        }
+
+        public void Display() 
+        {
+            _type.Display(_x, _y);
+        }
+    }
+
+    public class TreeFactory 
+    {
+        private static Dictionary<string, TreeType> _treeTypes = new Dictionary<string, TreeType>();
+
+        public static TreeType GetTreeType(string name, string color, string texture) 
+        {
+            string key = $"{name} {color} {texture}";
+            if (!_treeTypes.ContainsKey(key)) 
+            {
+                TreeType type = new TreeType(name, color, texture);
+                _treeTypes.Add(key, type);
+
+                //ИЛИ
+                //_treeTypes[key] = new TreeType(name, color, texture);
+                Console.WriteLine($"Создан новый тип дерева: {key}");
+            }
+
+            return _treeTypes[key];
+        }
+    }
+}
